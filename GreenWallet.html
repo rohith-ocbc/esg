@@ -1,0 +1,261 @@
+<! –– rohith ––> .
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plastic Bag Usage Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F5F5F5;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+        }
+        .logo {
+            max-width: 150px;
+            margin: 20px auto;
+        }
+        h1 {
+            color: #E60028;
+        }
+        form {
+            background-color: #FFFFFF;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px; /* Increase the margin-bottom for more space */
+        }
+        .input-group img {
+            margin-right: 20px;
+            max-height: 100px;
+            border-radius: 10px;
+        }
+        .input-group label {
+            margin: 0;
+            font-weight: bold;
+            flex: 1;
+        }
+        .input-group-container {
+            width: 100%;
+        }
+        input {
+            width: calc(100% - 40px); /* Adjust width to ensure it fits nicely below the label */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        button {
+            background-color: #E60028;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            font-size: 16px;
+        }
+        #result, #summary {
+            background-color: #FFFFFF;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .carousel-container {
+            display: none; /* Initially hidden */
+            margin-top: 40px;
+            text-align: center;
+        }
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        .carousel-item {
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 0 10px;
+            padding: 20px;
+            min-width: 200px;
+            text-align: center;
+        }
+        @media (min-width: 600px) {
+            button {
+                width: auto;
+            }
+            .input-group {
+                flex-direction: row;
+            }
+            .input-group-container {
+                display: flex;
+                flex-direction: column;
+                width: calc(100% - 120px); /* Adjust width to ensure it fits nicely */
+            }
+            input {
+                margin-top: 0;
+                margin-left: 0; /* Remove auto margin */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://www.ocbc.com/iwov-resources/sg/ocbc/gbc/img/about-us/our-brand/logo_ocbcbank-horizontal.png" alt="OCBC Logo" class="logo">
+        <h1>Green Wallet</h1>
+        <form id="usageForm">
+            <div class="input-group">
+                <img src="https://platform.vox.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/22704640/GettyImages_1312472686t.jpg?quality=90&strip=all&crop=0%2C0%2C100%2C100&w=2400" alt="Grocery Icon">
+                <div class="input-group-container">
+                    <label for="tripsPerWeek">How many times do you go grocery shopping per week?</label>
+                    <input type="number" id="tripsPerWeek" name="tripsPerWeek" min="1" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <img src="https://i.imgur.com/BfaRdS2.png" alt="Plastic Bag Icon">
+                <div class="input-group-container">
+                    <label for="bagsPerTrip">How many plastic bags do you take per visit?</label>
+                    <input type="number" id="bagsPerTrip" name="bagsPerTrip" min="1" required>
+                </div>
+            </div>
+            <button type="button" onclick="calculate()">Calculate</button>
+        </form>
+        <div id="result"></div>
+        <canvas id="investmentChart"></canvas>
+        <div id="summary"></div>
+        <!-- Carousel -->
+        <div class="carousel-container" id="carouselContainer">
+            <h2 style="color:black; text-align:left">Sustainability Themed Products</h2>
+            <div class="carousel">
+                <div class="carousel-item">
+                    <h3 style="color:red; text-align:left">Allianz Global Sustainability Fund</h3>
+                    <p style="text-align:left">3-year return: +17.50%</p>
+                </div>
+                <div class="carousel-item">
+                    <h3 style="color:red; text-align:left">AB Sustainable Global Thematic Fund</h3>
+                    <p style="text-align:left">3-year return: +12.43%</p>
+                </div>
+                <div class="carousel-item">
+                    <h3 style="color:red; text-align:left">Amundi Funds Asia Income ESG</h3>
+                    <p style="text-align:left">Annualised Yield: +7.03%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let chart;
+
+        function calculate() {
+            var tripsPerWeek = document.getElementById('tripsPerWeek').value;
+            var bagsPerTrip = document.getElementById('bagsPerTrip').value;
+
+            if (!tripsPerWeek || !bagsPerTrip) {
+                alert("Please enter valid numbers in both fields.");
+                return;
+            }
+
+            var totalBagsPerYear = tripsPerWeek * bagsPerTrip * 52;
+            var monthlyCost = totalBagsPerYear * 0.05 / 12;
+            var carbonEmissions = totalBagsPerYear * 1.58;
+            
+            // Clear existing content before updating
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('summary').innerHTML = '';
+            
+            document.getElementById('result').innerHTML = 
+                `<b>You are losing out SGD ${(monthlyCost * 12).toFixed(2)} per year.</b> ` + 
+                `<br><br>Carbon emissions associated with your plastic bag usage is <b>${carbonEmissions.toFixed(2)} kg CO2e</b> per year.`;
+            var sp500MonthlyReturns = [-4.08, 3.22, 5.34, 1.59, 4.54, 9.13, -2.10, -4.77, -1.59, 3.21, 6.61, 0.43,
+                                       1.56, 3.67, -2.44, 6.28, -5.76, 5.59, 8.10, -9.21, -4.08, 9.22, -8.25, 0.18,
+                                       -8.72, 3.71, -2.99, -5.17, 4.48, -0.69, 7.01, -4.65, 3.04, 2.38, 2.33, 0.70,
+                                       5.34, 4.38, 2.76, -1.01, 3.84, 10.95, -2.66, -3.80, 7.19, 5.64, 1.99, 4.76,
+                                       12.82, -12.35];
+            var monthNames = ["Jan 2020", "Feb 2020", "Mar 2020", "Apr 2020", "May 2020", "Jun 2020", "Jul 2020", "Aug 2020", "Sep 2020","Oct 2020", "Nov 2020", "Dec 2020",
+                              "Jan 2021", "Feb 2021", "Mar 2021", "Apr 2021", "May 2021","Jun 2021", "Jul 2021", "Aug 2021", "Sep 2021", "Oct 2021", "Nov 2021", "Dec 2021",
+                              "Jan 2022", "Feb 2022", "Mar 2022", "Apr 2022", "May 2022", "Jun 2022", "Jul 2022", "Aug 2022", "Sep 2022", "Oct 2022", "Nov 2022", "Dec 2022",
+                              "Jan 2023", "Feb 2023", "Mar 2023", "Apr 2023", "May 2023", "Jun 2023", "Jul 2023", "Aug 2023", "Sep 2023", "Oct 2023", "Nov 2023", "Dec 2023",
+                              "Jan 2024", "Feb 2024", "Mar 2024", "Apr 2024"];
+            plotInvestmentChart(monthlyCost, sp500MonthlyReturns, monthNames, carbonEmissions);
+
+            // Show the carousel after calculation
+            document.getElementById('carouselContainer').style.display = 'block';
+        }
+
+        function plotInvestmentChart(monthlyCost, sp500MonthlyReturns, monthNames, carbonEmissions) {
+            var investmentValue = 0;
+            var investmentValues = [];
+
+            for (var i = 0; i < sp500MonthlyReturns.length; i++) {
+                investmentValue = (investmentValue + monthlyCost) * (1 + sp500MonthlyReturns[i] / 100);
+                investmentValues.push(investmentValue.toFixed(2));
+            }
+
+            var ctx = document.getElementById('investmentChart').getContext('2d');
+            if (chart) {
+                chart.destroy();
+            }
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: monthNames,
+                    datasets: [{
+                        label: 'Potential Investment Growth (SGD)',
+                        data: investmentValues,
+                        borderColor: '#E60028',
+                        backgroundColor: 'rgba(230, 0, 40, 0.1)',
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Investment Value (SGD)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Months'
+                            }
+                        }
+                    }
+                }
+            });
+
+            var totalInvestmentValue = investmentValues[investmentValues.length - 1];
+            var totalCO2eSaved = (carbonEmissions * 5).toFixed(2);
+            var kmPerTrip = 51.2;
+            var co2PerKm = 0.17;
+            var totalTripsEquivalent = (totalCO2eSaved / (kmPerTrip * co2PerKm)).toFixed(0);
+
+            document.getElementById('summary').innerHTML = 
+                `You would have made <b>SGD ${totalInvestmentValue}</b> over <b>5 years</b> by being sustainable and investing in S&P 500 index fund. ` + 
+                `<br><br>Also would have saved <b>${totalCO2eSaved} kg of CO2e</b>, which is equivalent to traveling ${totalTripsEquivalent} times between Changi Airport and Tuas by car in Singapore.`;
+        }
+    </script>
+</body>
+</html>
