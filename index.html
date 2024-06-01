@@ -83,8 +83,8 @@
             margin-bottom: 10px;
         }
         .summary-item img {
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             margin-right: 10px;
         }
         .carousel-container {
@@ -151,11 +151,11 @@
             <button type="button" onclick="calculate()">Calculate</button>
         </form>
         <div id="result"></div>
-        <canvas id="investmentChart"></canvas>
+        <canvas id="investmentChart" width="800" height="400"></canvas>
         <div id="summary"></div>
         <!-- Carousel -->
         <div class="carousel-container" id="carouselContainer">
-            <h2 style="color:black; text-align:left">Do you know?</h2>
+            <h2 style="color:black; text-align:left">Sustainability Themed products</h2>
             <div class="carousel">
                 <div class="carousel-item">
                     <a href="https://www.ocbc.com/personal-banking/investments/unit-trusts/funds-details.page?fundCode=ASAMH2SGD" target="_blank" style="text-decoration: none; color: inherit;"><h3 style="color:red; text-align:left">Allianz Global Sustainability Fund</h3></a>
@@ -193,14 +193,10 @@
             document.getElementById('summary').innerHTML = '';
             
             document.getElementById('result').innerHTML = 
-                `<b>You are losing out <span style="color:#FF3131">SGD ${(monthlyCost * 12).toFixed(2)}</span> per year.</b>`;
-            var sp500MonthlyReturns = [-4.08, 3.22, 5.34, 1.59, 4.54, 9.13, -2.10, -4.77, -1.59, 3.21, 6.61, 0.43,
-                                       1.56, 3.67, -2.44, 6.28, -5.76, 5.59, 8.10, -9.21, -4.08, 9.22, -8.25, 0.18,
-                                       -8.72, 3.71, -2.99, -5.17, 4.48, -0.69, 7.01, -4.65, 3.04, 2.38, 2.33, 0.70, 5.34, 4.38,2.76, -1.01, 3.84, 10.95, -2.66, -3.80, 7.19, 5.64, 1.99, 4.76, 12.82, -12.35];
-            var monthNames = ["Jan 2020", "Feb 2020", "Mar 2020", "Apr 2020", "May 2020", "Jun 2020", "Jul 2020", "Aug 2020", "Sep 2020","Oct 2020", "Nov 2020", "Dec 2020","Jan 2021", "Feb 2021", "Mar 2021", "Apr 2021", "May 2021","Jun 2021", "Jul 2021", "Aug 2021", "Sep 2021", "Oct 2021", "Nov 2021", "Dec 2021",
-                              "Jan 2022", "Feb 2022", "Mar 2022", "Apr 2022", "May 2022", "Jun 2022", "Jul 2022", "Aug 2022", "Sep 2022", "Oct 2022", "Nov 2022", "Dec 2022",
-                              "Jan 2023", "Feb 2023", "Mar 2023", "Apr 2023", "May 2023", "Jun 2023", "Jul 2023", "Aug 2023", "Sep 2023", "Oct 2023", "Nov 2023", "Dec 2023",
-                              "Jan 2024", "Feb 2024", "Mar 2024", "Apr 2024"];
+                `<center><b>You are losing out <span style="color:#FF3131">SGD ${(monthlyCost * 12).toFixed(2)}</span> per year.</b></center>`;
+            var sp500MonthlyReturns = [-4.08, 3.22, 5.34, 1.59, 4.54, 9.13, -2.10, -4.77, -1.59, 3.21, 6.61, 0.43,1.56, 3.67, -2.44, 6.28, -5.76, 5.59, 8.10, -9.21, -4.08, 9.22, -8.25, 0.18,-8.72, 3.71, -2.99, -5.17, 4.48, -0.69, 7.01, -4.65, 3.04, 2.38, 2.33, 0.70, 5.34, 4.38,2.76, -1.01, 3.84, 10.95, -2.66, -3.80, 7.19, 5.64, 1.99, 4.76, 12.82, -12.35];
+            var monthNames = ["Jan 2020", "Feb 2020", "Mar 2020", "Apr 2020", "May 2020", "Jun 2020", "Jul 2020", "Aug 2020", "Sep 2020","Oct 2020", "Nov 2020", "Dec 2020","Jan 2021", "Feb 2021", "Mar 2021", "Apr 2021", "May 2021","Jun 2021", "Jul 2021", "Aug 2021", "Sep 2021", "Oct 2021", "Nov 2021", "Dec 2021","Jan 2022", "Feb 2022", "Mar 2022", "Apr 2022", "May 2022", "Jun 2022", "Jul 2022", "Aug 2022", "Sep 2022", "Oct 2022", "Nov 2022", "Dec 2022",
+                              "Jan 2023", "Feb 2023", "Mar 2023", "Apr 2023", "May 2023", "Jun 2023", "Jul 2023", "Aug 2023", "Sep 2023", "Oct 2023", "Nov 2023", "Dec 2023","Jan 2024", "Feb 2024", "Mar 2024", "Apr 2024"];
             plotInvestmentChart(monthlyCost, sp500MonthlyReturns, monthNames, carbonEmissions);
 
             // Show the carousel after calculation
@@ -259,10 +255,9 @@
             var totalTripsEquivalent = (totalCO2eSaved / (kmPerTrip * co2PerKm)).toFixed(0);
 
             document.getElementById('summary').innerHTML = 
-                `<div class="summary-item"><img src="https://i.imgur.com/Rhdctri.png" alt="Globe Icon"><span>You would have made <b><span style="color:#32CD32">SGD ${totalInvestmentValue}</span></b> over <b>5 years</b> by switching to a reusable bag and investing the savings in a S&P 500 index fund.</span></div></br>` + 
+                `<div class="summary-item"><img src="https://i.imgur.com/Rhdctri.png" alt="Globe Icon"><span>You would have made <b><span style="color:#32CD32">SGD ${totalInvestmentValue}</span></b> over <b>4 years</b> by switching to a reusable bag and investing the savings in a S&P 500 index fund.</span></div></br>` + 
                 `<div class="summary-item"><img src="https://i.imgur.com/JfJ78HD.png" alt="Piggy Bank Icon"><span>Avoided <span style="color:#FF3131"><b>${totalCO2eSaved} kg of CO2e</b></span>, equivalent to traveling ${totalTripsEquivalent} times between Changi Airport and Tuas by car in Singapore.</span></div>`;
         }
     </script>
 </body>
 </html>
-
